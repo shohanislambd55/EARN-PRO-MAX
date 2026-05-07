@@ -1,1 +1,137 @@
-
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Task Earn Pro</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial;background:#0f172a;color:white;padding:20px}
+  .container{max-width:800px;margin:auto}
+  .card{background:#1e293b;padding:20px;margin:15px 0;border-radius:10px;border:1px solid #334155}
+    input,button,select{padding:10px;margin:5px;border-radius:5px;border:none}
+    input,select{background:#334155;color:white;width:200px}
+    button{background:#8b5cf6;color:white;cursor:pointer}
+    button:hover{background:#7c3aed}
+  .task{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#334155;margin:8px 0;border-radius:5px}
+  .hidden{display:none}
+  .admin-panel{border:2px solid #22c55e}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="loginPage" class="card">
+      <h2>লগইন করুন</h2>
+      <input type="text" id="username" placeholder="ইউজারনেম বা ফোন নাম্বার">
+      <input type="password" id="password" placeholder="পাসওয়ার্ড">
+      <button onclick="login()">লগইন</button>
+      <p style="font-size:12px;margin-top:10px">নতুন? যেকোনো নাম-পাসওয়ার্ড দিলেই একাউন্ট খুলে যাবে</p>
+    </div>
+    <div id="dashboardPage" class="hidden">
+      <div class="card">
+        <h2>স্বাগতম, <span id="userName"></span> 👋</h2>
+        <p>আপনার ব্যালেন্স: ৳<span id="userBalance">0</span></p>
+        <p>প্ল্যান: <span id="userPlan">কোনো প্ল্যান নাই</span></p>
+        <button onclick="logout()">লগআউট</button>
+        <a href="index.html"><button>হোমপেজ</button></a>
+      </div>
+      <div class="card">
+        <h3>আজকের টাস্ক</h3>
+        <div id="taskList"></div>
+      </div>
+      <div id="adminPanel" class="card admin-panel hidden">
+        <h3>🔑 অ্যাডমিন প্যানেল</h3>
+        <h4>ইউজারের প্ল্যান অ্যাক্টিভ করো</h4>
+        <input type="text" id="activateUser" placeholder="ইউজারনেম">
+        <select id="planType">
+          <option value="100">বেসিক ৳100</option>
+          <option value="200">প্রো ৳200</option>
+        </select>
+        <button onclick="activatePlan()">অ্যাক্টিভ করো</button>
+        <h4 style="margin-top:20px">নতুন টাস্ক যোগ করো</h4>
+        <input type="text" id="taskTitle" placeholder="টাস্কের নাম">
+        <input type="text" id="taskLink" placeholder="লিঙ্ক https://...">
+        <input type="number" id="taskReward" placeholder="রিওয়ার্ড ৳">
+        <button onclick="addTask()">টাস্ক যোগ করো</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    let currentUser = null;
+    const ADMIN_USER = "admin";
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    if(tasks.length === 0){
+      tasks = [
+        {id:1, title:"YouTube চ্যানেল সাবস্ক্রাইব", link:"https://youtube.com", reward:5},
+        {id:2, title:"Facebook পেজে লাইক", link:"https://facebook.com", reward:5}
+      ];
+      saveTasks();
+    }
+    function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+    function saveTasks(){ localStorage.setItem('tasks', JSON.stringify(tasks)); }
+    function login(){
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if(!u ||!p){ alert('ইউজারনেম পাসওয়ার্ড দিন'); return; }
+      if(!users[u]) users[u] = {password:p, balance:0, plan:0, completedTasks:[]};
+      if(users[u].password!== p){ alert('পাসওয়ার্ড ভুল'); return; }
+      currentUser = u;
+      saveUsers();
+      showDashboard();
+    }
+    function showDashboard(){
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('dashboardPage').classList.remove('hidden');
+      document.getElementById('userName').innerText = currentUser;
+      document.getElementById('userBalance').innerText = users[currentUser].balance;
+      document.getElementById('userPlan').innerText = users[currentUser].plan === 0? 'কোনো প্ল্যান নাই' : '৳'+users[currentUser].plan;
+      if(currentUser === ADMIN_USER) document.getElementById('adminPanel').classList.remove('hidden');
+      loadTasks();
+    }
+    function loadTasks(){
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+      if(users[currentUser].plan === 0){
+        list.innerHTML = '<p>টাস্ক পেতে আগে প্ল্যান কিনুন। <a href="index.html">হোমপেজে যান</a></p>';
+        return;
+      }
+      tasks.forEach(t => {
+        const done = users[currentUser].completedTasks.includes(t.id);
+        list.innerHTML += `<div class="task"><div><b>${t.title}</b><br><small>রিওয়ার্ড: ৳${t.reward}</small></div>${done? '<button disabled>কমপ্লিটেড ✓</button>' : `<button onclick="completeTask(${t.id}, ${t.reward}, '${t.link}')">শুরু করো</button>`}</div>`;
+      });
+    }
+    function completeTask(id, reward, link){
+      window.open(link, '_blank');
+      users[currentUser].balance += reward;
+      users[currentUser].completedTasks.push(id);
+      saveUsers();
+      showDashboard();
+      alert('টাস্ক কমপ্লিট! ৳'+reward+' যোগ হয়েছে');
+    }
+    function activatePlan(){
+      const u = document.getElementById('activateUser').value;
+      const p = parseInt(document.getElementById('planType').value);
+      if(!users[u]){ alert('ইউজার পাওয়া যায়নি'); return; }
+      users[u].plan = p;
+      saveUsers();
+      alert(u + ' এর ৳' + p + ' প্ল্যান অ্যাক্টিভ হয়েছে');
+    }
+    function addTask(){
+      const title = document.getElementById('taskTitle').value;
+      const link = document.getElementById('taskLink').value;
+      const reward = parseInt(document.getElementById('taskReward').value);
+      if(!title ||!link ||!reward){ alert('সব ফিল্ড পূরণ করুন'); return; }
+      tasks.push({id:Date.now(), title, link, reward});
+      saveTasks();
+      alert('নতুন টাস্ক যোগ হয়েছে');
+      loadTasks();
+    }
+    function logout(){
+      currentUser = null;
+      document.getElementById('dashboardPage').classList.add('hidden');
+      document.getElementById('loginPage').classList.remove('hidden');
+    }
+  </script>
+</body>
+  </html>
