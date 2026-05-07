@@ -1,24 +1,62 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - EARN-PRO-MAX</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:Arial;background:#0f172a;color:white;padding:20px}
-    .container{max-width:800px;margin:auto}
-    .card{background:#1e293b;padding:20px;margin:15px 0;border-radius:10px;border:1px solid #334155}
-    input,button,select{padding:10px;margin:5px;border-radius:5px;border:none;width:100%}
-    input,select{background:#334155;color:white}
-    button{background:#8b5cf6;color:white;cursor:pointer;width:auto;padding:10px 20px}
-    button:hover{background:#7c3aed}
-    .task{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#334155;margin:8px 0;border-radius:5px}
-    .hidden{display:none}
-    .admin-panel{border:2px solid #22c55e}
-    .btn-group{display:flex;gap:10px}
-  </style>
+<title>Admin Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{background:#0f172a;color:white;padding:20px;font-family:Arial}
+.card{background:#1e293b;padding:15px;margin:10px 0;border-radius:8px}
+input,button{padding:10px;margin:5px;border:none;border-radius:5px;width:90%}
+button{background:#8b5cf6;color:white;width:auto;padding:10px 20px;cursor:pointer}
+.hide{display:none}
+.admin{border:2px solid #22c55e}
+</style>
 </head>
 <body>
-  <div class="container">
-    <div id="loginPage"
+
+<div id="loginBox" class="card">
+<h2>লগইন</h2>
+<input id="user" placeholder="ইউজারনেম লিখো">
+<input id="pass" type="password" placeholder="পাসওয়ার্ড">
+<button onclick="doLogin()">লগইন</button>
+<p style="font-size:12px;margin-top:10px">admin দিয়ে লগইন করলে অ্যাডমিন প্যানেল আসবে</p>
+</div>
+
+<div id="dashBox" class="card hide">
+<h2>স্বাগতম <span id="name"></span> 👋</h2>
+<button onclick="doLogout()">লগআউট</button>
+</div>
+
+<div id="adminBox" class="card admin hide">
+<h3>🔑 অ্যাডমিন প্যানেল</h3>
+<p>অভিনন্দন! অ্যাডমিন প্যানেল কাজ করতেছে ✅</p>
+<input id="newUser" placeholder="ইউজারনেম">
+<button onclick="alert('টেস্ট বাটন কাজ করে!')">টেস্ট বাটন</button>
+</div>
+
+<script>
+function doLogin(){
+  var u = document.getElementById('user').value;
+  if(u == ''){
+    alert('ইউজারনেম লিখো');
+    return;
+  }
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('dashBox').style.display = 'block';
+  document.getElementById('name').innerText = u;
+  if(u == 'admin'){
+    document.getElementById('adminBox').style.display = 'block';
+  }
+}
+function doLogout(){
+  document.getElementById('dashBox').style.display = 'none';
+  document.getElementById('adminBox').style.display = 'none';
+  document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('user').value = '';
+  document.getElementById('pass').value = '';
+}
+</script>
+
+</body>
+</html>
