@@ -20,21 +20,28 @@ button{background:#8b5cf6;color:white;width:auto;padding:10px 20px;cursor:pointe
 <input id="user" placeholder="ইউজারনেম লিখো">
 <input id="pass" type="password" placeholder="পাসওয়ার্ড">
 <button onclick="doLogin()">লগইন</button>
+<p style="font-size:12px;margin-top:10px">admin দিয়ে লগইন করলে অ্যাডমিন প্যানেল আসবে</p>
 </div>
 
 <div id="dashBox" class="card hide">
 <h2>স্বাগতম <span id="name"></span> 👋</h2>
 <button onclick="doLogout()">লগআউট</button>
 </div>
+
 <div id="adminBox" class="card admin hide">
 <h3>🔑 অ্যাডমিন প্যানেল</h3>
 <p>অভিনন্দন! অ্যাডমিন প্যানেল কাজ করতেছে ✅</p>
-<button onclick="alert('কাজ করে!')">টেস্ট</button>
+<input id="newUser" placeholder="নতুন ইউজারনেম">
+<button onclick="alert('টেস্ট বাটন কাজ করে!')">টেস্ট বাটন</button>
 </div>
 
 <script>
 function doLogin(){
   var u = document.getElementById('user').value;
+  if(u == ''){
+    alert('ইউজারনেম লিখো');
+    return;
+  }
   document.getElementById('loginBox').style.display = 'none';
   document.getElementById('dashBox').style.display = 'block';
   document.getElementById('name').innerText = u;
@@ -46,8 +53,10 @@ function doLogout(){
   document.getElementById('dashBox').style.display = 'none';
   document.getElementById('adminBox').style.display = 'none';
   document.getElementById('loginBox').style.display = 'block';
+  document.getElementById('user').value = '';
+  document.getElementById('pass').value = '';
 }
 </script>
 
 </body>
-  </html>
+</html>
