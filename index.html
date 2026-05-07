@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Earn Pro</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:20px}
+    .container{max-width:600px;margin:auto}
+    .plan{background:#1e293b;padding:25px;margin:15px;border-radius:15px;border:2px solid #8b5cf6}
+    h1{color:#8b5cf6;margin-bottom:10px}
+    button{background:#8b5cf6;padding:12px 25px;border:none;color:white;border-radius:8px;cursor:pointer;font-size:16px;margin-top:10px}
+    button:hover{background:#7c3aed}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Earn Pro 🚀</h1>
+    <p>প্ল্যান কিনে দিনে ইনকাম করুন</p>
+    
+    <div class="plan">
+      <h3>বেসিক প্ল্যান</h3>
+      <h2>৳100</h2>
+      <p>দিনে ৳20 ইনকাম | 5টা টাস্ক</p>
+      <button onclick="buyPlan(100)">প্ল্যান কিনুন</button>
+    </div>
+
+    <div class="plan">
+      <h3>প্রো প্ল্যান</h3>
+      <h2>৳200</h2>
+      <p>দিনে ৳30 ইনকাম | 8টা টাস্ক</p>
+      <button onclick="buyPlan(200)">প্ল্যান কিনুন</button>
+    </div>
+    
+    <br><br>
+    <a href="dashboard.html"><button>লগইন / ড্যাশবোর্ড</button></a>
+  </div>
+
+  <script>
+    function buyPlan(amount){
+      alert('bKash: 01XXXXXXXXX এ '+amount+' টাকা Send Money করুন।\nTrxID টি আমাদের WhatsApp এ দিন: 01XXXXXXXXX');
+    }
+  </script>
+</body>
+</html>
